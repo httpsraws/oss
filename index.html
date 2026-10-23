@@ -7,15 +7,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute"><symbol id="a" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></symbol></svg>
-<header><div class="wrap"><nav>
+<header><div class="wrap"><nav aria-label="Navegação principal">
 <a class="logo" href="#home" data-p="home" aria-label="OSS, início"><img src="assets/oss-logo.svg" alt="OSS"></a>
-<ul><li><a class="l on" href="#home" data-p="home">Projeto</a></li><li><a class="l" href="#posicoes" data-p="posicoes">Posições</a></li></ul>
+<ul class="desktop-links"><li><a class="l on" href="#home" data-p="home">Projeto</a></li><li><a class="l" href="#posicoes" data-p="posicoes">Posições</a></li></ul>
 <a class="out" href="#contribuir" data-p="contribuir">Contribuir</a>
-</nav></div></header>
+<button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
+</nav></div>
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+<button class="menu-close" id="menuClose" type="button" aria-label="Fechar menu">×</button>
+<nav aria-label="Navegação móvel"><a href="#home" data-p="home">Projeto</a><a href="#posicoes" data-p="posicoes">Posições</a></nav>
+</div></header>
 
 <main><div class="wrap">
 <!-- HOME -->
@@ -118,6 +123,6 @@
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Vídeo"><div class="mb">
 <button class="x" id="close" aria-label="Fechar">✕</button><div class="mv" id="mv"></div><div class="mt"><h3 id="mt"></h3><div class="meta" id="mm"></div></div></div></div>
 
-<script src="script.js"></script>
+<script src="script.js?v=2"></script>
 </body>
 </html>
