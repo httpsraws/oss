@@ -10,8 +10,8 @@ p{margin:0}a{color:inherit}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 header{position:fixed;top:0;left:0;right:0;z-index:30;padding-top:calc(14px + env(safe-area-inset-top,0px))}
 nav{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.72);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:1px solid rgba(255,255,255,.9);border-radius:99px;padding:8px 8px 8px 24px;box-shadow:0 8px 30px rgba(15,42,130,.08)}
-.logo{font-weight:700;font-size:23px;letter-spacing:-.05em;text-decoration:none}
-.logo i{font-style:normal;color:var(--blue)}
+.logo{display:inline-flex;align-items:center;text-decoration:none;flex:none}
+.logo img{display:block;width:82px;height:auto}
 nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
 nav .l{display:block;padding:9px 16px;border-radius:99px;text-decoration:none;font-weight:500;font-size:15px;color:var(--mute)}
 nav .l:hover,nav .l.on{color:var(--navy);background:rgba(29,78,216,.08)}

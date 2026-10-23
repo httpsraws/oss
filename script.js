@@ -29,14 +29,21 @@ $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeM()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
 function observe(){$$(".page.on .rv").forEach(el=>{if(!el.classList.contains("in"))io.observe(el)})}
+function normalizePage(p){
+ try{p=decodeURIComponent(p)}catch{}
+ p=p.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ return p==="posicoes"?"posicoes":p==="projeto"?"home":p;
+}
 function go(p){
+ p=normalizePage(p);
  if(!$("#"+p))p="home";
  $$(".page").forEach(x=>x.classList.toggle("on",x.id===p));
  $$("header [data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===p));
  window.scrollTo({top:0,behavior:"auto"});observe();
 }
-document.addEventListener("click",e=>{const a=e.target.closest("[data-p]");if(a){e.preventDefault();history.replaceState(null,"","#"+a.dataset.p);go(a.dataset.p)}});
+document.addEventListener("click",e=>{const a=e.target.closest("[data-p]");if(a){e.preventDefault();const p=normalizePage(a.dataset.p);history.pushState(null,"","#"+p);go(p)}});
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
+window.addEventListener("popstate",()=>go(location.hash.slice(1)||"home"));
 // Formulário: confirmação local. Conecte a um serviço (ex.: Formspree) para receber os envios.
 $("#form").addEventListener("submit",e=>{
  e.preventDefault();const f=e.target;
