@@ -1,4 +1,40 @@
 // Troque "url" pelo link de incorporação (YouTube embed) ou arquivo .mp4.
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const pageAliases={projeto:"home",posicoes:"posicoes",contribuir:"contribuir",home:"home"};
+function normalizePage(value){
+ try{value=decodeURIComponent(value)}catch{}
+ const key=value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ return pageAliases[key]||"home";
+}
+function go(value){
+ const page=normalizePage(value);
+ $$(".page").forEach(section=>section.classList.toggle("on",section.id===page));
+ $$('header [data-p]').forEach(link=>link.classList.toggle("on",normalizePage(link.dataset.p)===page));
+ window.scrollTo({top:0,behavior:"auto"});
+ if(typeof observe==="function")observe();
+}
+const menuToggle=$("#menuToggle"),mobileMenu=$("#mobileMenu");
+function closeMenu(){
+ if(!menuToggle||!mobileMenu)return;
+ document.body.classList.remove("menu-open");menuToggle.setAttribute("aria-expanded","false");
+ menuToggle.setAttribute("aria-label","Abrir menu");mobileMenu.setAttribute("aria-hidden","true");
+}
+function openMenu(){
+ if(!menuToggle||!mobileMenu)return;
+ document.body.classList.add("menu-open");menuToggle.setAttribute("aria-expanded","true");
+ menuToggle.setAttribute("aria-label","Fechar menu");mobileMenu.setAttribute("aria-hidden","false");$("#menuClose")?.focus();
+}
+menuToggle?.addEventListener("click",()=>menuToggle.getAttribute("aria-expanded")==="true"?closeMenu():openMenu());
+$("#menuClose")?.addEventListener("click",closeMenu);
+document.addEventListener("click",event=>{
+ const link=event.target instanceof Element?event.target.closest("[data-p]"):null;
+ if(!link)return;
+ event.preventDefault();const page=normalizePage(link.dataset.p);closeMenu();
+ if(location.hash==="#"+page)go(page);else location.hash=page;
+},true);
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
+window.addEventListener("popstate",()=>go(location.hash.slice(1)||"home"));
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMenu()});
 const V=[
 {n:"Arm drag (Drill)",c:"Drill",url:""},
 {n:"Ippon Seoi Nage (Drill)",c:"Drill",url:""},
@@ -8,7 +44,6 @@ const V=[
 {n:"Guada-aranha",c:"Guarda",url:""},
 {n:"Guarda laço",c:"Guarda",url:""},
 {n:"Triângulo da guarda laço (rolamento de ombro)",c:["Finalização","Guarda"],url:""}];
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const categories=v=>Array.isArray(v.c)?v.c:[v.c];
 let cat="Todas";
 function render(){
@@ -27,29 +62,8 @@ function closeM(){$("#modal").classList.remove("on");$("#mv").innerHTML=""}
 $("#close").onclick=closeM;
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeM()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
-function observe(){$$(".page.on .rv").forEach(el=>{if(!el.classList.contains("in"))io.observe(el)})}
-function normalizePage(p){
- try{p=decodeURIComponent(p)}catch{}
- p=p.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
- return p==="posicoes"?"posicoes":p==="projeto"?"home":p;
-}
-function go(p){
- p=normalizePage(p);
- if(!$("#"+p))p="home";
- $$(".page").forEach(x=>x.classList.toggle("on",x.id===p));
- $$("header [data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===p));
- window.scrollTo({top:0,behavior:"auto"});observe();
-}
-document.addEventListener("click",e=>{const a=e.target.closest("[data-p]");if(a){e.preventDefault();const p=normalizePage(a.dataset.p);if(location.hash==="#"+p)go(p);else location.hash=p;closeMenu()}});
-window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
-window.addEventListener("popstate",()=>go(location.hash.slice(1)||"home"));
-const menuToggle=$("#menuToggle"),mobileMenu=$("#mobileMenu");
-function closeMenu(){document.body.classList.remove("menu-open");menuToggle.setAttribute("aria-expanded","false");menuToggle.setAttribute("aria-label","Abrir menu");mobileMenu.setAttribute("aria-hidden","true")}
-function openMenu(){document.body.classList.add("menu-open");menuToggle.setAttribute("aria-expanded","true");menuToggle.setAttribute("aria-label","Fechar menu");mobileMenu.setAttribute("aria-hidden","false");$("#menuClose").focus()}
-menuToggle.addEventListener("click",()=>menuToggle.getAttribute("aria-expanded")==="true"?closeMenu():openMenu());
-$("#menuClose").addEventListener("click",closeMenu);
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
+const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1}):null;
+function observe(){$$(".page.on .rv").forEach(el=>{if(!el.classList.contains("in")){if(io)io.observe(el);else el.classList.add("in")}})}
 // Formulário: confirmação local. Conecte a um serviço (ex.: Formspree) para receber os envios.
 $("#form").addEventListener("submit",e=>{
  e.preventDefault();const f=e.target;
